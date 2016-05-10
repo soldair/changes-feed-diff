@@ -3,17 +3,19 @@ var dir = __dirname+'/data'
 
 var normalize = require('normalize-registry-metadata')
 var ccf = require('concurrent-couch-follower')
-var differ = require('./')
+var makeDiffer = require('./')
+var differ = makeDiffer({dir:dir})
 
 var fs = require('fs')
 var ws = fs.createWriteStream(__dirname+'/example.log',{flags:'a+'})
 
 ccf(function(change,done){
-
   change.doc = normalize(change.doc) 
-  if(!change.doc) return done()
+  if(!change.doc) {
+    return done()
+  }
 
-  differ(dir, change, function(err, report) {
+  differ(change, function(err, report) {
     if(err) throw err;
     var oreport = {name:change.doc.name,sequence:change.sequence,diff:report}
     var report = JSON.stringify(oreport)

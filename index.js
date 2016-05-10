@@ -1,6 +1,7 @@
 
 var prev = require('./lib/prev')
 var diff = require('./lib/diff')
+var rmfiles = require('./lib/rmfiles')
 var fs = require('fs')
 var path = require('path')
 var mkdirp = require('mkdirp')
@@ -68,7 +69,8 @@ module.exports = function(options){
         else writeFile(path.join(mdir,change.seq+'-seq.json'),JSON.stringify(change.doc),function(err,data){
           if(meta.files && meta.files.length > keepVersions) {
             // clean files while we have the lock to prevent stacking and racey weirdness
-            rmfiles(meta.files.slice(0,keepVersions),function(e){
+            var cull = meta.files.length-keepVersions
+            rmfiles(meta.files.slice(0,cull),function(e){
               if(e) console.error('warning: failed to rm files '+e);
               _cb(err,report) 
             })
