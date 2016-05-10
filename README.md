@@ -35,7 +35,7 @@ this will print
     code: 'VNEQUAL' } ]
 ```
 
-this stores the previous version on disk inside the data directory so if your process crashes and the database does compaction these are as consistent as they can be.
+this stores the previous version on disk inside the data directory. we keep a number of versions so if your process crashes and the database does compaction these are as consistent as they can be.
 
 ```
 $ tree data
@@ -101,3 +101,6 @@ these are the kinds of changes that you will see. the reason string may change b
   - the "b" value is falsey but its not the same false as "a"
 - VNEQUAL
   - value does not equal value at "b"
+## fun facts
+
+this only allows one concurrent diff per document id. this prevents a race condition where 2 versions of the same document are compared at the same time yeilding an incorrect diff for the later version.

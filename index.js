@@ -4,7 +4,7 @@ var diff = require('./lib/diff')
 var fs = require('fs')
 var path = require('path')
 var mkdirp = require('mkdirp')
-
+var writeFile = require('write-file-atomic')
 // only one concurrent change in progress per _id
 
 module.exports = function(options){
@@ -65,7 +65,7 @@ module.exports = function(options){
 
       function save() {
         if(meta.exists) _cb(err,report)
-        else fs.writeFile(path.join(mdir,change.seq+'-seq.json'),JSON.stringify(change.doc),function(err,data){
+        else writeFile(path.join(mdir,change.seq+'-seq.json'),JSON.stringify(change.doc),function(err,data){
           if(meta.files && meta.files.length > keepVersions) {
             // clean files while we have the lock to prevent stacking and racey weirdness
             rmfiles(meta.files.slice(0,keepVersions),function(e){
