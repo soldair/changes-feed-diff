@@ -4,7 +4,7 @@ generate diffs of changes to documents from a couch style changes feeds
 ```js
 
 var doc1 = {seq:1,id:"alice",doc:{name:"alice",inc:1}}
-var doc2 = {seq:2,id:"alice",doc:{name:"alice",inc:1}}
+var doc2 = {seq:2,id:"alice",doc:{name:"alice",inc:2}}
 
 var makeDiffer = require('change-feed-diff')
 var differ = makeDiffer({
