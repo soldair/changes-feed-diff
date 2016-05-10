@@ -101,6 +101,8 @@ these are the kinds of changes that you will see. the reason string may change b
   - the "b" value is falsey but its not the same false as "a"
 - VNEQUAL
   - value does not equal value at "b"
+
+
 ## fun facts
 
 this only allows one concurrent diff per document id. this prevents a race condition where 2 versions of the same document are compared at the same time yeilding an incorrect diff for the later version.
