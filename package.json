@@ -1,6 +1,6 @@
 {
   "name": "changes-feed-diff",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "generate diffs of old documents to new in changes from a couch style changes feed",
   "main": "index.js",
   "scripts": {
