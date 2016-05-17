@@ -65,11 +65,16 @@ module.exports = function(options){
       save()
 
       function save() {
-        if(meta.exists) _cb(err,report)
+        if(meta.exists || change.test) _cb(err,report)
         else writeFile(path.join(mdir,change.seq+'-seq.json'),JSON.stringify(change.doc),function(err,data){
           if(meta.files && meta.files.length > keepVersions) {
             // clean files while we have the lock to prevent stacking and racey weirdness
             var cull = meta.files.length-keepVersions
+            // 6 files
+            // 3 keep versions
+            // 3 cull versions
+            // oldest -> newest
+            // [x,x,x][o,o,o]
             rmfiles(meta.files.slice(0,cull),function(e){
               if(e) console.error('warning: failed to rm files '+e);
               _cb(err,report) 
