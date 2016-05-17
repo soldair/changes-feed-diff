@@ -59,10 +59,17 @@ you can run [example.js](./example.js) to do this on the npm changes feed
     - required. this is the place where we store old versions.
   - options.versions
     - optional. default 5. how many old versions to keep around before deleting them.
+  - options.nestDirectory
+    - optional. nest change documents in a deeper directory. like `/a/apple/_attachments/file` instead of `/a/apple/file`
+- differ(change,cb)
+  - change, is an object with an "id", numeric "seq",and a "doc" property. the diff is performed between docs
+  - cb, the callback. called with `cb(err,diff,previous document)`
+    - err, any error
+    - diff, the structural diff. see diff format 
+    - previous document, it may be undefined. It is the doc property value of the previous (by seq sort) change object.
 
 ### diff format
 ```
-
 [
   {
 
@@ -70,13 +77,13 @@ you can run [example.js](./example.js) to do this on the npm changes feed
     reason:'a text reason',
     values:{a:'new',b:'old'}, 
     // the values compared to determine the result. 
-    //in most vases this is not the value of the key but the values used to validate the assertion
+    //in most cases this is not the value of the key but the values used to validate the assertion
     code: a code that represents comparison type. listed below
   }
 ]
 
 ```
-if there are not changes the diff is an empty array `[]`
+if there are no changes, or no previous version the diff is an empty array `[]`
 
 
 ### diff codes

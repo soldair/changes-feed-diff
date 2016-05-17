@@ -13,6 +13,8 @@ module.exports = function(options){
   var processing = {}
   var dir = options.dir
   var keepVersions = options.versions || 5
+  // nest the data inside /a/apple[?/nest directory]/[change files like 1-seq.json]
+  var nestDirectory = options.nestDirectory
 
   return processChange
 
@@ -49,6 +51,7 @@ module.exports = function(options){
     var name = change.id
 
     var mdir = path.join(dir,name[0],name)
+    if(nestDirectory) mdir = path.join(mdir,nestDirectory)
     // if there is no previous try and make the dir.
     prev(mdir,change.seq,function(err,previous,meta) {
       if(err) return _cb(err)
@@ -65,7 +68,7 @@ module.exports = function(options){
       save()
 
       function save() {
-        if(meta.exists || change.test) _cb(err,report)
+        if(meta.exists || change.test) _cb(err,report,previous)
         else writeFile(path.join(mdir,change.seq+'-seq.json'),JSON.stringify(change.doc),function(err,data){
           if(meta.files && meta.files.length > keepVersions) {
             // clean files while we have the lock to prevent stacking and racey weirdness
@@ -77,9 +80,9 @@ module.exports = function(options){
             // [x,x,x][o,o,o]
             rmfiles(meta.files.slice(0,cull),function(e){
               if(e) console.error('warning: failed to rm files '+e);
-              _cb(err,report) 
+              _cb(err,report,previous) 
             })
-          } else _cb(err,report)
+          } else _cb(err,report,previous)
         })
       }
     })
