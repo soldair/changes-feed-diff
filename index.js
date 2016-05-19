@@ -35,7 +35,7 @@ module.exports = function(options){
       else processing[change.id] = cb
     } else processing[pkey] = []
     
-    var _cb = function(err,data){
+    var _cb = function(err,data,prev){
       var queue = processing[pkey]
       // have to unroll the whole queue serially
       delete processing[pkey]
@@ -45,7 +45,7 @@ module.exports = function(options){
       }
 
       // cb has to be last because we dont push.apply on the quque to merge.
-      cb(err,data)
+      cb(err,data,prev)
     }
 
     var name = change.id
