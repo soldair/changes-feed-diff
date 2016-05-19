@@ -89,3 +89,9 @@ module.exports = function(options){
   }
 }
 
+
+module.exports.diff = function(a,b){
+  var report = []
+  diff(a||{},b||{},report)
+  return report
+}
